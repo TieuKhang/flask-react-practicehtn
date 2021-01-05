@@ -1,7 +1,21 @@
-import React from 'react'
+import React from 'react';
+import {
+    Link
+  } from "react-router-dom";
 
-const Card = () => {
-    return <div> Hello </div>
+export const Card = ({toDoList}) => {
+    return (
+        <>
+            {toDoList.map(todoparam => {
+                return(
+                    <ul key = {todoparam.id}>
+                        <li> 
+                            <Link to = {`${todoparam.id}`}> {todoparam.content} </Link>
+                        </li>
+                    </ul>
+                )
+            })}
+        </>
+    )
 }
 
-export default Card;
