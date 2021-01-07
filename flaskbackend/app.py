@@ -1,7 +1,9 @@
 from flask import (Flask, request, render_template, json, jsonify)
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db'
 db = SQLAlchemy(app)
 
@@ -37,6 +39,12 @@ def create():
     db.session.commit()
 
     return {'201': 'Add succesfully'}
+
+@app.route("/api/create/<int:id>", methods = ['POST'])
+def edit(id):
+    request_data = json.loads(request.data)
+    Todo.query.filter_by(id=request_data['id']).update({'content': request_data['content']})
+    db.session.commit()
 
 @app.route('/api/<int:id>')
 def show(id):
