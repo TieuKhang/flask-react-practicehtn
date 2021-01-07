@@ -1,18 +1,26 @@
 import React, {useState,useEffect} from 'react'
 import { Card } from './Card'
 import { Form } from './Form'
+import {
+    Link
+  } from "react-router-dom";
 import api from './Api'
+
 
 export const Todo = () => {
     const [todo,setTodo] = useState([])
     const [addToDo,setAddToDo] = useState('')
 
     useEffect(() => {
-        fetch('/api').then(response => {
-            if (response.ok) {
-                return response.json()
-            }
-        }).then(data => setTodo(data))
+        api
+            .get('/api')
+            .then(response => {
+                return response.data
+            })
+            .then(data => {
+                console.log(data)
+                setTodo(data)
+            })
     },[])
 
     const handleFormChange = (inputVal) => {
@@ -21,13 +29,11 @@ export const Todo = () => {
     }
 
     const handleFormSubmit = () => {
-        fetch('/api/create', {
-            method:'POST',
-            body: JSON.stringify({
+        api
+            .post('/api/create',{
                 content: addToDo
             })
-        }).then(response => response.json)
-          .then(msg => {
+            .then(msg => {
               console.log(msg)
               setAddToDo('')
               updateData()
@@ -35,11 +41,15 @@ export const Todo = () => {
     }
 
     const updateData = () => {
-        fetch('/api').then(response => {
-            if (response.ok) {
-                return response.json()
-            }
-        }).then(data => setTodo(data))
+        api
+            .get('/api')
+            .then(response => {
+                return response.data
+            })
+            .then(data => {
+                console.log(data)
+                setTodo(data)
+            })
     }
 
     return (

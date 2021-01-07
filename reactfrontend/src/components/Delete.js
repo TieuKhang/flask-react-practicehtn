@@ -2,20 +2,18 @@ import React, {useState,useEffect} from 'react'
 import {
     useHistory
   } from "react-router-dom";
+import api from './Api'
 
 export const Delete = ({id}) => {
     const history = useHistory()
     const deleteTodo = () => {
-        fetch(`/api/${id}` , {
-            method:'POST',
-            body: JSON.stringify({
+        api
+            .post(`/api/${id}/delete`,{
                 id: id
             })
-        }).then(response => response.json)
-        .then(data => {
-            console.log(data)
-            history.push('/')
-        })
+            .then(
+                history.push('/')
+            )
     }
 
     return(

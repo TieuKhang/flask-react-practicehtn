@@ -5,17 +5,25 @@ import {
     useParams,useHistory,
     Link
   } from "react-router-dom";
+import api from './Api'
 
 export const Show = () => {
     const {id} = useParams()
     const [toDo,setTodo] = useState([])
     const [edit,setEdit] = useState('')
     const [clickEdit,setClickEdit] = useState(false)
-    
+    const history = useHistory()
+
     useEffect(() => {
-        fetch(`/api/${id}`)
-        .then(response => response.json())
-        .then(data => setTodo(data))
+        api
+            .get(`/api/${id}`)
+            .then(response => {
+                return response.data
+            })
+            .then(data => {
+                console.log(data)
+                setTodo(data)
+            })
     },[id])
 
     const handleEditChange = (inputVal) => {
@@ -24,27 +32,29 @@ export const Show = () => {
     }
 
     const handleEditSubmit = () => {
-        fetch(`/api/create/${id}`, {
-            method:'POST',
-            body: JSON.stringify({
+        api
+            .post(`/api/create/${id}`,{
                 id: id,
                 content: edit
             })
-        }).then(response => response.json)
-          .then(msg => {
-              console.log(msg)
-              setEdit('')
-              upDateEdit()
-        })
+            .then(
+                setEdit('')
+            )
+            .then(
+                upDateEdit()
+            )
     }
 
     const upDateEdit = () => {
-        fetch(`/api/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            setClickEdit(false)
-            setTodo(data)
-        })
+        api
+            .get(`/api/${id}`)
+            .then(response => {
+                return response.data
+            })
+            .then(data => {
+                setClickEdit(false)
+                setTodo(data)
+            })
     }
     
     const onClickEdit = () => {
